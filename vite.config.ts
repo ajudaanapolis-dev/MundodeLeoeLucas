@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'node:path';
 
-// GitHub Pages base path. The prompt requires /App/.
+// GitHub Pages base path. The prompt requires /MundodeLeoeLucas/.
 // Override with VITE_BASE=/ for local root serving if needed.
 const base = process.env.VITE_BASE ?? '/MundodeLeoeLucas/';
 
