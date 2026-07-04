@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
-<rect width="512" height="512" rx="112" fill="#dbe9f2"/>
-<circle cx="256" cy="256" r="160" fill="#fffdfa"/>
-<text x="256" y="225" text-anchor="middle" font-size="145" font-family="system-ui" font-weight="900" fill="#7898b4">ABC</text>
-<text x="256" y="345" text-anchor="middle" font-size="68" font-family="system-ui" font-weight="800" fill="#a67f63">L&amp;L</text>
-</svg>
