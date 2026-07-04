@@ -1,0 +1,27 @@
+[
+  {
+    "id": "aquario",
+    "name": "Ecossistema do aquário",
+    "status": "implementado"
+  },
+  {
+    "id": "carnivoras",
+    "name": "Plantas carnívoras",
+    "status": "planejado"
+  },
+  {
+    "id": "invertebrados",
+    "name": "Invertebrados",
+    "status": "planejado"
+  },
+  {
+    "id": "axolotes",
+    "name": "Axolotes",
+    "status": "planejado"
+  },
+  {
+    "id": "metodo",
+    "name": "Método científico",
+    "status": "planejado"
+  }
+]

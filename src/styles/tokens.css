@@ -1,0 +1,66 @@
+/* Design tokens — paleta pastel original (não derivada de material protegido). */
+:root {
+  /* Paleta */
+  --c-sky:      #A8D8EA; /* azul suave  */
+  --c-sage:     #A9CBA4; /* verde sálvia */
+  --c-butter:   #FBE7A1; /* amarelo manteiga */
+  --c-lavender: #D8C7EA; /* lavanda */
+  --c-peach:    #FBC7AE; /* pêssego */
+  --c-rose:     #F6C1CF; /* rosa claro */
+  --c-sand:     #EFE4D2; /* bege */
+  --c-cream:    #FFFBF4; /* branco quente */
+  --c-ink:      #3C3A4B; /* texto principal */
+  --c-ink-soft: #6C6A7C;
+
+  /* Papéis semânticos */
+  --bg:           var(--c-cream);
+  --surface:      #FFFFFF;
+  --text:         var(--c-ink);
+  --text-soft:    var(--c-ink-soft);
+  --accent:       var(--c-sky);
+  --accent-2:     var(--c-peach);
+
+  /* Tipografia */
+  --font-display: "Baloo 2", "Comic Sans MS", "Segoe UI Rounded", system-ui, sans-serif;
+  --font-body:    "Nunito", system-ui, -apple-system, sans-serif;
+
+  /* Raios e sombras suaves */
+  --r-sm: 12px;
+  --r-md: 20px;
+  --r-lg: 32px;
+  --r-pill: 999px;
+  --shadow-soft: 0 8px 24px rgba(60, 58, 75, 0.12);
+  --shadow-lift: 0 12px 32px rgba(60, 58, 75, 0.18);
+
+  /* Alvos de toque grandes (primeira infância) */
+  --tap-min: 72px;
+
+  /* Movimento */
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 160ms;
+  --dur: 320ms;
+}
+
+/* Alto contraste opcional */
+:root[data-contrast="high"] {
+  --bg: #FFFFFF;
+  --surface: #FFFFFF;
+  --text: #1A1A22;
+  --text-soft: #333340;
+  --shadow-soft: 0 0 0 2px #1A1A22;
+  --shadow-lift: 0 0 0 3px #1A1A22;
+}
+
+/* Redução de movimento respeitada globalmente */
+:root[data-reduced-motion="true"] * {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-reduced-motion="false"]) * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
