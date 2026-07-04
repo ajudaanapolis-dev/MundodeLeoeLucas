@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 
 // GitHub Pages base path. The prompt requires /App/.
 // Override with VITE_BASE=/ for local root serving if needed.
-const base = process.env.VITE_BASE ?? '/App/';
+const base = process.env.VITE_BASE ?? '/MundodeLeoeLucas/';
 
 export default defineConfig({
   base,
