@@ -1,0 +1,16 @@
+{
+  "name": "Mundo de Léo e Lucas",
+  "short_name": "Léo e Lucas",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#d7eef6",
+  "theme_color": "#2f7fb6",
+  "icons": [
+    {
+      "src": "./assets/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
