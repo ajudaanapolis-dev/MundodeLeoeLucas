@@ -1,16 +1,18 @@
 {
   "name": "Mundo de Léo e Lucas",
   "short_name": "Léo e Lucas",
-  "start_url": "./index.html",
+  "description": "Brinquedo digital educativo para dois irmãos.",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#eaf1ef",
-  "theme_color": "#8eabc3",
+  "orientation": "any",
+  "background_color": "#FFFBF4",
+  "theme_color": "#A8D8EA",
+  "lang": "pt-BR",
+  "categories": ["education", "kids"],
   "icons": [
-    {
-      "src": "./assets/icons/icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    }
+    { "src": "./assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "./assets/icons/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
