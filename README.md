@@ -1,25 +1,48 @@
-# Patch de progressão
+# Mundo de Léo e Lucas — versão pastel completa
 
-Substitua no repositório:
+Projeto completo com:
 
-- `js/app.js`
-- `js/storage.js`
-- `service-worker.js`
+## Jornada do Léo
+- Trilha científica adaptativa
+- Ecossistemas
+- Plantas carnívoras
+- Invertebrados
+- Axolotes
+- Método científico
+- Simulador de aquário
+- Progresso salvo
+- Exportação em JSON
 
-Adicione:
+## Mundo do Lucas
+- Letras vivas
+- Bichos amigos
+- Bandinha suave
+- Cores pastéis
+- Fundo do mar
+- Caixa surpresa
+- Sons curtos e discretos
+- Estímulos visuais de menor contraste
 
-- `data/progress.default.json`
+## Publicação no GitHub Pages
 
-## Nova lógica
+Envie o conteúdo da pasta para a raiz do repositório.
 
-- O Léo precisa concluir o nível atual em todas as cinco áreas.
-- Depois disso, o próximo nível geral é liberado.
-- Cada etapa concluída é registrada uma única vez.
-- Atualizar a página mantém o progresso no mesmo navegador.
-- O painel permite exportar e importar um arquivo JSON.
+Depois:
 
-## Limitação do GitHub Pages
+```text
+Settings → Pages → GitHub Actions
+```
 
-`progress.default.json` é um modelo estático. O navegador não pode alterar arquivos
-do repositório GitHub sozinho. Para sincronizar automaticamente entre aparelhos,
-é necessário um backend como Firebase ou Supabase.
+ou publique pela branch `main` na pasta `/root`.
+
+## Áudio
+
+Ao abrir o site, toque em **Ativar sons**.
+
+## Instalação no iPhone
+
+No Safari:
+
+```text
+Compartilhar → Adicionar à Tela de Início
+```
