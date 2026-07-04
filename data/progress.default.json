@@ -1,15 +1,17 @@
 {
   "app": "Mundo de Léo e Lucas",
-  "schemaVersion": 2,
-  "description": "Modelo inicial. O site publicado no GitHub Pages não grava diretamente neste arquivo.",
+  "schemaVersion": 1,
   "progress": {
-    "version": 2,
     "stars": 0,
     "leo": {
       "correct": 0,
       "errors": 0,
       "skills": {},
       "completed": {}
+    },
+    "lucas": {
+      "touches": 0,
+      "worlds": {}
     }
   }
 }
