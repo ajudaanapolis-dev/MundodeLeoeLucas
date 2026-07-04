@@ -1,130 +1,311 @@
 
-import {leoDomains,leoQuestions,lucasWorlds} from "./data.js";
-import {loadState,saveState,exportState} from "./storage.js";
-import {unlockAudio,playSound,setMuted,isMuted,isReady} from "./audio.js";
-
 const app=document.querySelector("#app");
-const effects=document.querySelector("#effects");
-let state=loadState();
-let route="home";
-let currentDomain="ecosystems";
-let currentQuestion=null;
-let activeLetter="A";
-let surpriseItem="🧸";
-let currentLucasWorld="letters";
+const fx=document.querySelector("#fx");
 
-function save(){saveState(state)}
-function go(next){route=next;playSound("click");render()}
-function globalLeoLevel(){
- let level=1;
- for(let tier=1;tier<3;tier++){
-  if(leoDomains.every(d=>state.leo.completed?.[`${d.id}:${tier}`])) level=tier+1;
-  else break;
- }
- return level;
+let route="home";
+let previousRoute="home";
+let audioReady=false;
+let muted=false;
+let narration=true;
+let reduceMotion=false;
+let letters=[];
+let labs=[];
+let selectedLetter=null;
+let selectedLab=null;
+let selectedLevel=1;
+let currentLabQuestion=null;
+
+const audioNames=["tap","open","success","wrong","magic","water","animal","music","science"];
+const audios={};
+
+const defaultState={
+ lettersExplored:[],
+ letterTouches:{},
+ leo:{correct:0,errors:0,skills:{},completed:{}},
+ settings:{muted:false,narration:true,reduceMotion:false}
+};
+let state=loadState();
+muted=Boolean(state.settings?.muted);
+narration=state.settings?.narration!==false;
+reduceMotion=Boolean(state.settings?.reduceMotion);
+document.body.classList.toggle("reduce-motion",reduceMotion);
+
+function loadState(){
+ try{
+  const parsed=JSON.parse(localStorage.getItem("mll-complete-v1")||"null");
+  if(parsed) return {
+   ...structuredClone(defaultState),
+   ...parsed,
+   leo:{...structuredClone(defaultState.leo),...(parsed.leo||{})},
+   settings:{...structuredClone(defaultState.settings),...(parsed.settings||{})}
+  };
+ }catch{}
+ return structuredClone(defaultState);
 }
-function mastery(id){return state.leo.skills[id]?.mastery||0}
+function save(){
+ state.settings={muted,narration,reduceMotion};
+ localStorage.setItem("mll-complete-v1",JSON.stringify({...state,savedAt:new Date().toISOString()}));
+}
+function go(next){
+ previousRoute=route;
+ route=next;
+ play("tap");
+ render();
+}
+function back(){
+ const next=previousRoute||"home";
+ previousRoute=route;
+ route=next;
+ render();
+}
+function play(name){
+ if(!audioReady||muted)return;
+ const a=audios[name]||audios.tap;
+ a.currentTime=0;
+ a.play().catch(()=>{});
+}
+function speak(text){
+ if(!narration||muted||!("speechSynthesis" in window))return;
+ window.speechSynthesis.cancel();
+ const u=new SpeechSynthesisUtterance(text);
+ u.lang="pt-BR";
+ u.rate=.82;
+ u.pitch=1.05;
+ u.volume=.9;
+ window.speechSynthesis.speak(u);
+}
+async function unlockAudio(){
+ await Promise.all(audioNames.map(name=>new Promise(resolve=>{
+  const a=new Audio(`./assets/audio/${name}.wav`);
+  a.preload="auto";
+  a.addEventListener("canplaythrough",resolve,{once:true});
+  a.addEventListener("error",resolve,{once:true});
+  a.load();
+  audios[name]=a;
+ })));
+ audioReady=true;
+ play("open");
+ render();
+}
+async function loadData(){
+ [letters,labs]=await Promise.all([
+  fetch("./data/letters.json").then(r=>r.json()),
+  fetch("./data/leo-labs.json").then(r=>r.json())
+ ]);
+}
+function header(title,backRoute="home"){
+ return `<div class="topbar">
+ <button class="icon" data-go="${backRoute}">⬅️</button>
+ <div class="pill">${title}</div>
+ <button class="icon" data-action="mute">${muted?"🔇":"🔊"}</button>
+ </div>`;
+}
 function render(){
  if(route==="home")return renderHome();
+ if(route==="lucasAlphabet")return renderLucasAlphabet();
+ if(route==="letterScene")return renderLetterScene();
  if(route==="leoHome")return renderLeoHome();
  if(route==="leoChallenge")return renderLeoChallenge();
  if(route==="leoAquarium")return renderLeoAquarium();
  if(route==="leoDashboard")return renderLeoDashboard();
- if(route==="lucasHome")return renderLucasHome();
- if(route==="lucasWorld")return renderLucasWorld();
+ if(route==="settings")return renderSettings();
+ if(route==="parentGate")return renderParentGate();
+ if(route==="parentArea")return renderParentArea();
 }
-
-function header(title,back="home"){
- return `<div class="topbar">
- <button class="icon" data-go="${back}">⬅️</button>
- <div class="pill">${title}</div>
- <button class="icon" data-action="mute">${isMuted()?"🔇":"🔊"}</button>
- </div>`;
-}
-
 function renderHome(){
  app.innerHTML=`<main class="app"><section class="screen">
- <div class="topbar"><div class="pill">Mundo de Léo e Lucas</div><div class="pill">⭐ ${state.stars}</div></div>
- <div class="hero"><h1>Mundo de <span>Léo e Lucas</span></h1><p>Duas experiências integradas em uma paleta pastel e com estímulos mais suaves.</p></div>
- ${!isReady()?`<div class="audio"><strong>Ativar sons suaves</strong><p>Os efeitos sonoros foram mantidos curtos e discretos.</p><button class="big sand" data-action="unlock"><span>Ativar sons</span><span>🔊</span></button></div>`:""}
+ <div class="topbar"><div class="pill">Mundo de Léo e Lucas</div><div class="pill">⭐ ${state.leo.correct*12+state.lettersExplored.length}</div></div>
+ <div class="hero"><h1>Mundo de <span>Léo e Lucas</span></h1><p>Descoberta, narração, interação e ciência em um único universo.</p></div>
+ ${!audioReady?`<div class="audio"><strong>Ativar sons e narração</strong><p>Toque uma vez para liberar o áudio.</p><button class="big peach" data-action="unlock"><span>Começar</span><span>🔊</span></button></div>`:""}
  <div class="profile-grid">
- <button class="profile leo" data-go="leoHome"><div class="face">🧒</div><h2>Jornada do Léo</h2><p>Ciência, lógica, hipóteses e progressão adaptativa.</p><span class="big peach"><span>Entrar</span><span>🔬</span></span></button>
- <button class="profile lucas" data-go="lucasHome"><div class="face">👶</div><h2>Mundo do Lucas</h2><p>Letras, animais, música, cores e estímulos sensoriais suaves.</p><span class="big blue"><span>Explorar</span><span>🌈</span></span></button>
+  <button class="profile lucas" data-go="lucasAlphabet"><div class="face">👶</div><h2>ABC do Lucas</h2><p>Alfabeto completo, personagem-guia e uma cena interativa própria para cada letra.</p><span class="big blue"><span>Abrir alfabeto</span><span>🔤</span></span></button>
+  <button class="profile leo" data-go="leoHome"><div class="face">🧒</div><h2>Laboratório do Léo</h2><p>Ciência, hipóteses, experimentos e progressão adaptativa.</p><span class="big green"><span>Investigar</span><span>🔬</span></span></button>
+ </div>
+ <div class="home-tools">
+  <button data-go="settings">⚙️ Ajustes</button>
+  <button data-go="parentGate">👨‍👩‍👧 Área dos responsáveis</button>
+  <button data-action="install">📲 Instalar aplicativo</button>
  </div>
  </section></main>`;
- bind();
+ bindCommon();
+ document.querySelector("[data-action='install']").onclick=()=>alert("No iPhone: Compartilhar → Adicionar à Tela de Início. No Android/Chrome: menu → Instalar aplicativo.");
 }
-
-function renderLeoHome(){
- const level=globalLeoLevel();
+function renderLucasAlphabet(){
+ const completed=state.lettersExplored.length;
  app.innerHTML=`<main class="app"><section class="screen">
- ${header("Jornada do Léo")}
- <div class="hero"><h1>Pequeno <span>Pesquisador</span></h1><p>Nível geral ${level}. Conclua todas as áreas para evoluir.</p></div>
- <div class="world-grid">
- <button class="world" data-go="leoPath"><div class="emoji">🗺️</div><h3>Trilha científica</h3><p>Desafios por domínio e níveis crescentes.</p><small>Adaptativo</small></button>
- <button class="world" data-go="leoAquarium"><div class="emoji">🐠</div><h3>Simulador de aquário</h3><p>Controle variáveis e observe consequências.</p><small>Causa e efeito</small></button>
- <button class="world" data-go="leoDashboard"><div class="emoji">📈</div><h3>Evolução</h3><p>Acertos, erros, níveis e backup em JSON.</p><small>Progresso</small></button>
- </div>
- <div class="path" id="leoPath"><div class="path-line"></div>
- ${leoDomains.map(d=>`<div class="node-row"><button class="node" style="background:${d.color}" data-domain="${d.id}">${state.leo.completed?.[`${d.id}:${level}`]?"✅":d.emoji}</button><div class="node-info"><h3>${d.title} — nível ${level}</h3><p>${d.desc}</p><div class="mastery">${[1,2,3,4].map(n=>`<span class="${mastery(d.id)>=n?"on":""}"></span>`).join("")}</div></div></div>`).join("")}
+ ${header("ABC do Lucas","home")}
+ <div class="abc-home">
+  <div class="guide-card"><img src="./assets/illustrations/professor-lume-aponta.svg" alt="Professor Lume apontando para as letras"></div>
+  <div class="alphabet-panel">
+   <h2 class="alphabet-title">Escolha uma letra</h2>
+   <div class="progress"><div style="width:${(completed/letters.length)*100}%"></div></div>
+   <div class="alphabet-grid">${letters.map(item=>`<button class="letter-btn ${state.lettersExplored.includes(item.letter)?"done":""}" data-letter="${item.letter}">${item.letter}</button>`).join("")}</div>
+  </div>
  </div>
  </section></main>`;
- bind();
- document.querySelectorAll("[data-domain]").forEach(b=>b.onclick=()=>{
-  currentDomain=b.dataset.domain;
-  currentQuestion=leoQuestions[currentDomain].find(q=>q.lvl===globalLeoLevel());
-  route="leoChallenge";playSound("click");render();
+ bindCommon();
+ document.querySelectorAll("[data-letter]").forEach(b=>b.onclick=()=>{
+  selectedLetter=letters.find(x=>x.letter===b.dataset.letter);
+  route="letterScene";
+  play("open");
+  speak(`${selectedLetter.letter}. ${selectedLetter.letter} de ${selectedLetter.word}`);
+  render();
  });
 }
-
-function renderLeoChallenge(){
- const q=currentQuestion;
- const level=globalLeoLevel();
+function sceneClass(item){
+ if(["B","E","I","N"].includes(item.letter))return "ocean";
+ if(["V","W","Y"].includes(item.letter))return "desert";
+ if(["X","Z"].includes(item.letter))return "night";
+ return "";
+}
+function renderLetterScene(){
+ const x=selectedLetter;
  app.innerHTML=`<main class="app"><section class="screen">
- ${header(leoDomains.find(d=>d.id===currentDomain).title,"leoHome")}
- <div class="progress"><div style="width:${state.leo.completed?.[`${currentDomain}:${level}`]?100:0}%"></div></div>
- <div class="lab"><h2>${q.q}</h2><p>${q.ctx}</p><div class="choice-grid">${[...q.o].sort(()=>Math.random()-.5).map(([t,e])=>`<button class="choice" data-answer="${t}">${e}<small>${t}</small></button>`).join("")}</div><div class="status" id="status">Observe as pistas antes de responder.</div></div>
- <button class="big green" id="finish" style="display:none"><span>Concluir e voltar</span><span>➡️</span></button>
+ ${header(`${x.letter} de ${x.word}`,"lucasAlphabet")}
+ <div class="scene-shell">
+  <div class="scene-title">Toque em ${x.word.toLowerCase()}</div>
+  <div class="scene ${sceneClass(x)}" id="scene">
+   <img class="guide-mini" src="./assets/illustrations/professor-lume.svg" alt="">
+   <button class="main-object" data-action="object" aria-label="${x.word}">${x.emoji}</button>
+   <div class="word-card" data-action="word"><strong>${x.letter}</strong> de ${x.word}</div>
+  </div>
+ </div>
+ <div class="scene-controls">
+  <button data-action="letter-sound">🔤 Ouvir letra</button>
+  <button data-action="word-sound">🗣️ Ouvir palavra</button>
+  <button data-action="magic">✨ Surpresa</button>
+  <button data-action="next">➡️ Próxima</button>
+ </div>
  </section></main>`;
- bind();
+ bindCommon();
+ document.querySelector("[data-action='object']").onclick=e=>animateLetterObject(e.currentTarget,x,e);
+ document.querySelector("[data-action='letter-sound']").onclick=()=>{play("tap");speak(x.letter)};
+ document.querySelector("[data-action='word-sound']").onclick=()=>{play("open");speak(`${x.letter} de ${x.word}`)};
+ document.querySelector("[data-action='word']").onclick=()=>speak(x.fact);
+ document.querySelector("[data-action='magic']").onclick=e=>{play("magic");stars(e.clientX,e.clientY);if(["B","E","I","N"].includes(x.letter))bubbles()};
+ document.querySelector("[data-action='next']").onclick=()=>{
+  const i=letters.findIndex(l=>l.letter===x.letter);
+  selectedLetter=letters[(i+1)%letters.length];
+  speak(`${selectedLetter.letter}. ${selectedLetter.letter} de ${selectedLetter.word}`);
+  render();
+ };
+}
+function animateLetterObject(el,item,event){
+ const explored=new Set(state.lettersExplored);
+ explored.add(item.letter);
+ state.lettersExplored=[...explored];
+ state.letterTouches[item.letter]=(state.letterTouches[item.letter]||0)+1;
+ save();
+
+ const clsMap={
+  swim:"dance",splash:"jump",crawl:"crawl",snap:"pop",wave:"dance",carry:"crawl",
+  stretch:"pop",fly:"fly",flutter:"fly",openwings:"fly",slice:"pop",roar:"pop",
+  swing:"dance",sail:"crawl",bounce:"jump",pop:"pop",find:"crawl",dance:"dance",
+  jump:"jump",erupt:"pop",stack:"pop",music:"dance",run:"fly"
+ };
+ el.classList.remove("fly","jump","dance","pop","crawl");
+ void el.offsetWidth;
+ el.classList.add(clsMap[item.action]||"pop");
+
+ const sound=["splash","swim","wave","sail"].includes(item.action)?"water":
+             ["roar","snap"].includes(item.action)?"animal":
+             item.action==="music"?"music":"success";
+ play(sound);
+ speak(item.fact);
+ if(["splash","swim","wave"].includes(item.action))bubbles();
+ stars(event.clientX,event.clientY);
+}
+function labLevel(id){
+ const s=state.leo.skills[id]||{correct:0};
+ return Math.min(3,1+Math.floor((s.correct||0)/2));
+}
+function renderLeoHome(){
+ app.innerHTML=`<main class="app"><section class="screen">
+ ${header("Laboratório do Léo","home")}
+ <div class="hero"><h1>Professor Lume e o <span>Laboratório</span></h1><p>Escolha uma investigação científica.</p></div>
+ <div class="science-grid">
+ ${labs.map(lab=>`<button class="science-card" data-lab="${lab.id}"><div class="emoji">${lab.emoji}</div><h3>${lab.title}</h3><p>${lab.description}</p><small>Nível ${labLevel(lab.id)}</small></button>`).join("")}
+ <button class="science-card" data-go="leoAquarium"><div class="emoji">🧪</div><h3>Simulador de aquário</h3><p>Controle variáveis e observe consequências.</p><small>Experimento livre</small></button>
+ <button class="science-card" data-go="leoDashboard"><div class="emoji">📊</div><h3>Evolução</h3><p>Resultados, domínio e progresso salvo.</p><small>Painel</small></button>
+ </div>
+ </section></main>`;
+ bindCommon();
+ document.querySelectorAll("[data-lab]").forEach(b=>b.onclick=()=>{
+  selectedLab=labs.find(l=>l.id===b.dataset.lab);
+  selectedLevel=labLevel(selectedLab.id);
+  currentLabQuestion=selectedLab.levels.find(x=>x.level===selectedLevel);
+  route="leoChallenge";
+  play("science");
+  speak(currentLabQuestion.question);
+  render();
+ });
+}
+function renderLeoChallenge(){
+ const q=currentLabQuestion;
+ app.innerHTML=`<main class="app"><section class="screen">
+ ${header(selectedLab.title,"leoHome")}
+ <div class="lab">
+  <img src="./assets/illustrations/professor-lume.svg" style="width:125px;float:right" alt="">
+  <h2>${q.question}</h2>
+  <p>${q.context}</p>
+  <div style="clear:both"></div>
+  <div class="choice-grid">${[...q.options].sort(()=>Math.random()-.5).map(([t,e])=>`<button class="choice" data-answer="${t}">${e}<small>${t}</small></button>`).join("")}</div>
+  <div class="status" id="status">Escolha a hipótese mais consistente.</div>
+ </div>
+ <button class="big green" id="finishLab" style="display:none"><span>Concluir investigação</span><span>➡️</span></button>
+ </section></main>`;
+ bindCommon();
+ let answered=false;
  document.querySelectorAll("[data-answer]").forEach(b=>b.onclick=()=>{
-  const skill=state.leo.skills[currentDomain]??={correct:0,errors:0,mastery:0};
-  if(b.dataset.answer===q.a){
-   b.classList.add("correct");
-   const key=`${currentDomain}:${level}`;
-   if(!state.leo.completed[key]){
-    state.leo.completed[key]={completedAt:new Date().toISOString()};
-    skill.correct++;skill.mastery=Math.min(4,skill.mastery+1);
-    state.leo.correct++;state.stars+=12;
-   }
-   document.querySelector("#status").textContent="Correto. Explique quais pistas sustentam sua conclusão.";
-   document.querySelector("#finish").style.display="flex";
-   playSound("success");stars();
+  if(answered)return;
+  const skill=state.leo.skills[selectedLab.id]??={correct:0,errors:0,mastery:0};
+  if(b.dataset.answer===q.answer){
+   answered=true;
+   b.classList.add("ok");
+   skill.correct++;
+   skill.mastery=Math.min(4,Math.ceil(skill.correct/2));
+   state.leo.correct++;
+   state.leo.completed[`${selectedLab.id}:${q.level}`]=new Date().toISOString();
+   document.querySelector("#status").textContent="Correto. Agora explique quais pistas sustentam sua conclusão.";
+   document.querySelector("#finishLab").style.display="flex";
+   play("success");
+   speak("Correto. Agora explique quais pistas sustentam sua conclusão.");
+   stars();
   }else{
-   b.classList.add("wrong");skill.errors++;state.leo.errors++;
-   document.querySelector("#status").textContent="Revise as pistas e elimine as opções incompatíveis.";
-   playSound("error");setTimeout(()=>b.classList.remove("wrong"),500);
+   b.classList.add("bad");
+   skill.errors++;
+   state.leo.errors++;
+   document.querySelector("#status").textContent="Revise as pistas e elimine as alternativas incompatíveis.";
+   play("wrong");
+   speak("Revise as pistas e elimine as alternativas incompatíveis.");
+   setTimeout(()=>b.classList.remove("bad"),500);
   }
   save();
  });
- document.querySelector("#finish").onclick=()=>go("leoHome");
+ document.querySelector("#finishLab").onclick=()=>go("leoHome");
 }
-
 function renderLeoAquarium(){
  app.innerHTML=`<main class="app"><section class="screen">
  ${header("Simulador de aquário","leoHome")}
- <div class="simulator"><div class="creature" style="left:80px;top:180px">🐠</div><div class="creature" style="right:90px;top:245px">🐟</div><div class="creature" style="left:260px;bottom:20px">🌿</div></div>
- <div class="lab"><div class="control-grid">
- <div class="control"><label>Temperatura <span id="tVal">24°C</span></label><input id="temp" type="range" min="18" max="32" value="24"></div>
- <div class="control"><label>Oxigênio <span id="oVal">70%</span></label><input id="oxy" type="range" min="20" max="100" value="70"></div>
- <div class="control"><label>Limpeza <span id="cVal">85%</span></label><input id="clean" type="range" min="10" max="100" value="85"></div>
- <div class="control"><label>Alimento <span id="fVal">40%</span></label><input id="food" type="range" min="0" max="100" value="40"></div>
- </div><div class="status" id="simStatus">O ecossistema está equilibrado.</div></div>
+ <div class="simulator" id="aquariumSim">
+  <div class="creature" style="left:80px;top:180px">🐠</div>
+  <div class="creature" style="right:90px;top:245px">🐟</div>
+  <div class="creature" style="left:260px;bottom:20px">🌿</div>
+ </div>
+ <div class="lab">
+  <div class="control-grid">
+   <div class="control"><label>Temperatura <span id="tVal">24°C</span></label><input id="temp" type="range" min="18" max="32" value="24"></div>
+   <div class="control"><label>Oxigênio <span id="oVal">70%</span></label><input id="oxy" type="range" min="20" max="100" value="70"></div>
+   <div class="control"><label>Limpeza <span id="cVal">85%</span></label><input id="clean" type="range" min="10" max="100" value="85"></div>
+   <div class="control"><label>Alimento <span id="fVal">40%</span></label><input id="food" type="range" min="0" max="100" value="40"></div>
+  </div>
+  <div class="status" id="simStatus">O ecossistema está equilibrado.</div>
+ </div>
  <button class="big blue" data-action="analyze"><span>Analisar sistema</span><span>🔬</span></button>
  </section></main>`;
- bind();
- ["temp","oxy","clean","food"].forEach(id=>document.querySelector("#"+id).oninput=e=>{
-  document.querySelector("#"+id[0]+"Val").textContent=e.target.value+(id==="temp"?"°C":"%");
+ bindCommon();
+ [["temp","tVal","°C"],["oxy","oVal","%"],["clean","cVal","%"],["food","fVal","%"]].forEach(([id,out,suffix])=>{
+  document.querySelector("#"+id).oninput=e=>document.querySelector("#"+out).textContent=e.target.value+suffix;
  });
  document.querySelector("[data-action='analyze']").onclick=()=>{
   const t=+document.querySelector("#temp").value;
@@ -137,181 +318,127 @@ function renderLeoAquarium(){
   else if(c<55)msg="A água precisa de manutenção.";
   else if(f>75)msg="O excesso de alimento pode gerar resíduos.";
   document.querySelector("#simStatus").textContent=msg;
-  playSound(msg.includes("equilibrado")?"success":"error");
+  play(msg.includes("equilibrado")?"success":"wrong");
+  speak(msg);
  };
 }
-
 function renderLeoDashboard(){
  app.innerHTML=`<main class="app"><section class="screen">
  ${header("Evolução do Léo","leoHome")}
- <div class="statgrid"><div class="stat"><strong>${state.leo.correct||0}</strong>acertos</div><div class="stat"><strong>${state.leo.errors||0}</strong>erros</div><div class="stat"><strong>${globalLeoLevel()}</strong>nível geral</div><div class="stat"><strong>${state.stars}</strong>estrelas</div></div>
- <div style="margin-top:13px">${leoDomains.map(d=>{const s=state.leo.skills[d.id]||{};return `<div class="level-card"><strong>${d.emoji} ${d.title}</strong><small>Acertos: ${s.correct||0} · Erros: ${s.errors||0}</small><div class="mastery">${[1,2,3,4].map(n=>`<span class="${(s.mastery||0)>=n?"on":""}"></span>`).join("")}</div></div>`}).join("")}</div>
- <button class="big lavender" data-action="export"><span>Baixar progresso em JSON</span><span>⬇️</span></button>
- </section></main>`;
- bind();
- document.querySelector("[data-action='export']").onclick=()=>exportState(state);
-}
-
-function renderLucasHome(){
- app.innerHTML=`<main class="app"><section class="screen">
- ${header("Mundo do Lucas")}
- <div class="hero"><h1>Descobertas <span>suaves</span></h1><p>Interações ricas, repetição e causa e efeito com cores pastéis.</p></div>
- <div class="world-grid">${lucasWorlds.map(w=>`<button class="world" data-lucas="${w.id}"><div class="emoji">${w.emoji}</div><h3>${w.title}</h3><p>${w.desc}</p></button>`).join("")}</div>
- </section></main>`;
- bind();
- document.querySelectorAll("[data-lucas]").forEach(b=>b.onclick=()=>{
-  currentLucasWorld=b.dataset.lucas;
-  state.lucas.worlds[currentLucasWorld]=(state.lucas.worlds[currentLucasWorld]||0)+1;
-  save();route="lucasWorld";playSound("click");render();
- });
-}
-
-function renderLucasWorld(){
- if(currentLucasWorld==="letters")return renderLucasLetters();
- if(currentLucasWorld==="animals")return renderLucasAnimals();
- if(currentLucasWorld==="music")return renderLucasMusic();
- if(currentLucasWorld==="colors")return renderLucasColors();
- if(currentLucasWorld==="ocean")return renderLucasOcean();
- return renderLucasSurprise();
-}
-
-function renderLucasLetters(){
- const letters=["A","B","C","D","E","F"];
- const map={A:["🐝","Abelha"],B:["⚽","Bola"],C:["🏠","Casa"],D:["🦕","Dinossauro"],E:["⭐","Estrela"],F:["🌸","Flor"]};
- const [emoji,label]=map[activeLetter];
- app.innerHTML=`<main class="app"><section class="screen">
- ${header("Letras vivas","lucasHome")}
- <div class="letter-show">${activeLetter}</div>
- <div class="letter-strip">${letters.map(l=>`<button class="letter ${l===activeLetter?"active":""}" data-letter="${l}">${l}</button>`).join("")}</div>
- <button class="big lavender" data-action="letter-object"><span>${activeLetter} de ${label}</span><span style="font-size:40px">${emoji}</span></button>
- <div class="bottom-nav"><button data-action="stars">⭐ Brilhar</button><button data-action="repeat">🔁 Repetir</button><button data-action="next-letter">➡️ Próxima</button></div>
- </section></main>`;
- bind();
- document.querySelectorAll("[data-letter]").forEach(b=>b.onclick=()=>{activeLetter=b.dataset.letter;playSound("click");render()});
- document.querySelector("[data-action='letter-object']").onclick=e=>{playSound("success");e.currentTarget.classList.add("pulse");stars(e.clientX,e.clientY)};
- document.querySelector("[data-action='next-letter']").onclick=()=>{activeLetter=letters[(letters.indexOf(activeLetter)+1)%letters.length];render()};
- document.querySelector("[data-action='repeat']").onclick=()=>playSound("soft");
- document.querySelector("[data-action='stars']").onclick=e=>stars(e.clientX,e.clientY);
-}
-
-function renderLucasAnimals(){
- app.innerHTML=`<main class="app"><section class="screen">
- ${header("Bichos amigos","lucasHome")}
- <div class="scene" id="scene"><div class="sky"></div><div class="ground"></div>
- ${hotspot("bird","35px","80px","🐦","Pássaro")}
- ${hotspot("monkey","auto","145px","🐒","Macaco","right:40px")}
- ${hotspot("dog","100px","auto","🐶","Cachorro","bottom:55px")}
- ${hotspot("duck","auto","auto","🦆","Pato","right:85px;bottom:45px")}
+ <div class="statgrid">
+  <div class="stat"><strong>${state.leo.correct}</strong>acertos</div>
+  <div class="stat"><strong>${state.leo.errors}</strong>erros</div>
+  <div class="stat"><strong>${Object.keys(state.leo.completed).length}</strong>etapas concluídas</div>
+  <div class="stat"><strong>${state.lettersExplored.length}</strong>letras exploradas</div>
  </div>
- <div class="bottom-nav"><button data-action="party">🎉 Dançar</button><button data-action="bubbles">🫧 Bolhas</button><button data-action="stars">⭐ Brilhar</button></div>
- </section></main>`;
- bind();
- document.querySelectorAll("[data-animal]").forEach(b=>b.onclick=e=>{
-  state.lucas.touches++;save();playSound("animal");
-  b.classList.add("dancer");setTimeout(()=>b.classList.remove("dancer"),700);stars(e.clientX,e.clientY);
- });
- document.querySelector("[data-action='party']").onclick=()=>{playSound("soft");document.querySelectorAll("[data-animal]").forEach(b=>b.classList.add("dancer"));setTimeout(()=>document.querySelectorAll("[data-animal]").forEach(b=>b.classList.remove("dancer")),900)};
- document.querySelector("[data-action='bubbles']").onclick=makeBubbles;
- document.querySelector("[data-action='stars']").onclick=e=>stars(e.clientX,e.clientY);
-}
-
-function renderLucasMusic(){
- app.innerHTML=`<main class="app"><section class="screen">
- ${header("Bandinha suave","lucasHome")}
- <div class="section">Toque e combine os sons</div>
- <div class="instrument-grid">
- <button class="instrument" style="background:#ead7b8" data-sound="drum">🥁</button>
- <button class="instrument" style="background:#d5e6ee" data-sound="bell">🔔</button>
- <button class="instrument" style="background:#e6dbe9" data-sound="soft">🎹</button>
- <button class="instrument" style="background:#dce8d3" data-sound="click">🪇</button>
+ <div style="margin-top:13px">
+ ${labs.map(lab=>{const s=state.leo.skills[lab.id]||{};return `<div class="level-card"><strong>${lab.emoji} ${lab.title}</strong><small>Acertos: ${s.correct||0} · Erros: ${s.errors||0} · Nível: ${labLevel(lab.id)}</small></div>`}).join("")}
  </div>
- <button class="big lavender" style="margin-top:13px" data-action="sequence"><span>Tocar sequência suave</span><span>▶️</span></button>
  </section></main>`;
- bind();
- document.querySelectorAll("[data-sound]").forEach(b=>b.onclick=()=>{state.lucas.touches++;save();playSound(b.dataset.sound);b.classList.add("pulse");setTimeout(()=>b.classList.remove("pulse"),550)});
- document.querySelector("[data-action='sequence']").onclick=()=>playSound("soft");
+ bindCommon();
 }
-
-function renderLucasColors(){
- const colors=[["#e9b7b7","🔴"],["#b8cee1","🔵"],["#eee0a8","🟡"],["#bfd8bc","🟢"]];
+function renderSettings(){
  app.innerHTML=`<main class="app"><section class="screen">
- ${header("Cores pastéis","lucasHome")}
- <div class="section">Toque para mudar o ambiente</div>
- <div class="color-board">${colors.map(([c,e])=>`<button class="color-btn" style="background:${c}" data-color="${c}">${e}</button>`).join("")}</div>
- <button class="big rose" style="margin-top:13px" data-action="rainbow"><span>Arco-íris suave</span><span>🌈</span></button>
- </section></main>`;
- bind();
- document.querySelectorAll("[data-color]").forEach(b=>b.onclick=()=>{document.body.style.background=b.dataset.color;playSound("click");b.classList.add("pulse");setTimeout(()=>b.classList.remove("pulse"),550)});
- document.querySelector("[data-action='rainbow']").onclick=()=>{document.body.style.background="linear-gradient(135deg,#e9b7b7,#eee0a8,#bfd8bc,#b8cee1,#d8c8e7)";playSound("success");stars()};
-}
-
-function renderLucasOcean(){
- app.innerHTML=`<main class="app"><section class="screen">
- ${header("Fundo do mar","lucasHome")}
- <div class="scene" id="scene"><div class="water"></div>
- ${hotspot("fish","35px","85px","🐠","Peixe")}
- ${hotspot("octopus","auto","180px","🐙","Polvo","right:40px")}
- ${hotspot("shell","230px","auto","🐚","Concha","bottom:55px")}
+ ${header("Ajustes","home")}
+ <div class="lab">
+  <div class="settings-grid">
+   <div class="setting"><span>🔊 Sons</span><button data-setting="sound">${muted?"Desativados":"Ativados"}</button></div>
+   <div class="setting"><span>🗣️ Narração</span><button data-setting="narration">${narration?"Ativada":"Desativada"}</button></div>
+   <div class="setting"><span>✨ Movimento reduzido</span><button data-setting="motion">${reduceMotion?"Ativado":"Desativado"}</button></div>
+  </div>
  </div>
- <div class="bottom-nav"><button data-action="bubbles">🫧 Bolhas</button><button data-action="fish-party">🐟 Nadar</button><button data-action="stars">⭐ Brilhar</button></div>
  </section></main>`;
- bind();
- document.querySelectorAll("[data-animal]").forEach(b=>b.onclick=e=>{state.lucas.touches++;save();playSound("water");b.classList.add("dancer");setTimeout(()=>b.classList.remove("dancer"),650);makeBubbles();stars(e.clientX,e.clientY)});
- document.querySelector("[data-action='bubbles']").onclick=makeBubbles;
- document.querySelector("[data-action='fish-party']").onclick=()=>playSound("soft");
- document.querySelector("[data-action='stars']").onclick=e=>stars(e.clientX,e.clientY);
+ bindCommon();
+ document.querySelector("[data-setting='sound']").onclick=()=>{muted=!muted;save();render()};
+ document.querySelector("[data-setting='narration']").onclick=()=>{narration=!narration;save();render()};
+ document.querySelector("[data-setting='motion']").onclick=()=>{reduceMotion=!reduceMotion;document.body.classList.toggle("reduce-motion",reduceMotion);save();render()};
 }
-
-function renderLucasSurprise(){
- const items=["🚂","🧸","🦕","🚗","⚽","🐳"];
- surpriseItem=items[Math.floor(Math.random()*items.length)];
+function renderParentGate(){
+ const a=Math.floor(2+Math.random()*7);
+ const b=Math.floor(1+Math.random()*6);
+ window.__parentAnswer=a+b;
  app.innerHTML=`<main class="app"><section class="screen">
- ${header("Caixa surpresa","lucasHome")}
- <div class="hero"><h1 style="font-size:85px">🎁</h1><p>Toque para descobrir.</p></div>
- <button class="surprise-box" data-action="reveal" id="surprise">❓</button>
- <button class="big green" style="margin-top:13px" data-action="new-surprise"><span>Nova surpresa</span><span>🔄</span></button>
+ ${header("Área dos responsáveis","home")}
+ <div class="parent-lock"><h2>Acesso para adultos</h2><p>Resolva para continuar:</p><input id="parentAnswer" inputmode="numeric" placeholder="${a} + ${b} = ?"><button class="big sand" style="margin-top:12px" data-action="unlock-parent"><span>Entrar</span><span>🔐</span></button></div>
  </section></main>`;
- bind();
- document.querySelector("[data-action='reveal']").onclick=()=>{document.querySelector("#surprise").textContent=surpriseItem;playSound("success");stars()};
- document.querySelector("[data-action='new-surprise']").onclick=()=>render();
+ bindCommon();
+ document.querySelector("[data-action='unlock-parent']").onclick=()=>{
+  if(+document.querySelector("#parentAnswer").value===window.__parentAnswer)go("parentArea");
+  else alert("Resposta incorreta.");
+ };
 }
-
-function hotspot(action,left,top,emoji,label,extra=""){
- const style=`${left!=="auto"?`left:${left};`:""}${top!=="auto"?`top:${top};`:""}${extra}`;
- return `<button class="hotspot" style="${style}" data-animal="${action}"><span class="object">${emoji}</span><span class="label">${label}</span></button>`;
+function renderParentArea(){
+ app.innerHTML=`<main class="app"><section class="screen">
+ ${header("Área dos responsáveis","home")}
+ <div class="statgrid">
+  <div class="stat"><strong>${state.lettersExplored.length}/26</strong>letras exploradas</div>
+  <div class="stat"><strong>${Object.values(state.letterTouches).reduce((a,b)=>a+b,0)}</strong>interações no ABC</div>
+  <div class="stat"><strong>${state.leo.correct}</strong>acertos do Léo</div>
+  <div class="stat"><strong>${state.leo.errors}</strong>erros do Léo</div>
+ </div>
+ <div class="lab" style="margin-top:13px">
+  <h2>Backup e controle</h2>
+  <button class="big lav" data-action="export"><span>Baixar progresso em JSON</span><span>⬇️</span></button>
+  <button class="big rose" style="margin-top:10px" data-action="reset"><span>Apagar progresso</span><span>🗑️</span></button>
+ </div>
+ </section></main>`;
+ bindCommon();
+ document.querySelector("[data-action='export']").onclick=exportProgress;
+ document.querySelector("[data-action='reset']").onclick=()=>{
+  if(confirm("Apagar todo o progresso salvo neste navegador?")){
+   localStorage.removeItem("mll-complete-v1");
+   state=structuredClone(defaultState);
+   save();
+   go("home");
+  }
+ };
 }
-
-function bind(){
- document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
- document.querySelector("[data-action='unlock']")?.addEventListener("click",async()=>{await unlockAudio();render()});
- document.querySelectorAll("[data-action='mute']").forEach(b=>b.onclick=()=>{setMuted(!isMuted());render()});
+function exportProgress(){
+ const blob=new Blob([JSON.stringify({
+  app:"Mundo de Léo e Lucas",
+  exportedAt:new Date().toISOString(),
+  progress:state
+ },null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+ a.href=url;
+ a.download=`mundo-leo-lucas-progresso-${new Date().toISOString().slice(0,10)}.json`;
+ a.click();
+ URL.revokeObjectURL(url);
 }
-
-function makeBubbles(){
- playSound("water");
+function bubbles(){
  const scene=document.querySelector("#scene");
  if(!scene)return;
- const rect=scene.getBoundingClientRect();
  for(let i=0;i<14;i++){
-  const b=document.createElement("div");b.className="bubble";
-  const size=18+Math.random()*42;b.style.width=b.style.height=size+"px";
-  b.style.left=(Math.random()*Math.max(100,rect.width-50))+"px";
-  b.style.top=(rect.height-25+Math.random()*35)+"px";
-  scene.appendChild(b);setTimeout(()=>b.remove(),3200);
+  const b=document.createElement("div");
+  b.className="bubble";
+  const size=16+Math.random()*40;
+  b.style.width=b.style.height=size+"px";
+  b.style.left=(30+Math.random()*(scene.clientWidth-60))+"px";
+  b.style.top=(scene.clientHeight-30)+"px";
+  scene.appendChild(b);
+  setTimeout(()=>b.remove(),3000);
  }
 }
-
 function stars(x=innerWidth/2,y=innerHeight/2){
- playSound("star");
  ["⭐","✨","🌟","💛","💙"].forEach((s,i)=>{
-  const e=document.createElement("div");e.className="star";e.textContent=s;
+  const e=document.createElement("div");
+  e.className="star";
+  e.textContent=s;
   e.style.left=(x-65+Math.random()*130)+"px";
   e.style.top=(y+Math.random()*25)+"px";
   e.style.animationDelay=(i*.05)+"s";
-  effects.appendChild(e);setTimeout(()=>e.remove(),1100);
+  fx.appendChild(e);
+  setTimeout(()=>e.remove(),1100);
  });
 }
-
+function bindCommon(){
+ document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
+ document.querySelector("[data-action='unlock']")?.addEventListener("click",unlockAudio);
+ document.querySelectorAll("[data-action='mute']").forEach(b=>b.onclick=()=>{muted=!muted;save();render()});
+}
+await loadData();
 render();
-
-if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js").catch(console.error));}
+if("serviceWorker" in navigator){
+ window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js").catch(console.error));
+}

@@ -1,48 +1,69 @@
-# Mundo de Léo e Lucas — versão pastel completa
+# Mundo de Léo e Lucas — aplicativo completo
 
-Projeto completo com:
+## Estrutura central
 
-## Jornada do Léo
-- Trilha científica adaptativa
-- Ecossistemas
-- Plantas carnívoras
-- Invertebrados
-- Axolotes
-- Método científico
-- Simulador de aquário
-- Progresso salvo
-- Exportação em JSON
+### Lucas
+- alfabeto completo de A a Z;
+- personagem-guia original;
+- uma cena própria por letra;
+- narração da letra, palavra e fato curto;
+- animação e som específicos;
+- progresso das letras exploradas.
 
-## Mundo do Lucas
-- Letras vivas
-- Bichos amigos
-- Bandinha suave
-- Cores pastéis
-- Fundo do mar
-- Caixa surpresa
-- Sons curtos e discretos
-- Estímulos visuais de menor contraste
+### Léo
+- laboratórios de ecossistemas;
+- plantas carnívoras;
+- invertebrados;
+- axolotes;
+- método científico;
+- progressão adaptativa em três níveis;
+- simulador de aquário.
 
-## Publicação no GitHub Pages
+### Recursos gerais
+- salvamento automático no navegador;
+- área dos responsáveis;
+- exportação do progresso em JSON;
+- controle de som;
+- controle de narração;
+- modo de movimento reduzido;
+- PWA;
+- funcionamento offline;
+- compatível com GitHub Pages.
 
-Envie o conteúdo da pasta para a raiz do repositório.
+## Publicação
 
-Depois:
+Extraia todo o conteúdo na raiz do repositório.
 
-```text
-Settings → Pages → GitHub Actions
-```
-
-ou publique pela branch `main` na pasta `/root`.
-
-## Áudio
-
-Ao abrir o site, toque em **Ativar sons**.
-
-## Instalação no iPhone
-
-No Safari:
+Estrutura principal:
 
 ```text
-Compartilhar → Adicionar à Tela de Início
+index.html
+manifest.webmanifest
+service-worker.js
+.nojekyll
+css/
+js/
+data/
+assets/
 ```
+
+## GitHub Pages
+
+O endereço esperado será:
+
+```text
+https://ajudaanapolis-dev.github.io/App/
+```
+
+## Áudio e voz
+
+Ao abrir, toque em **Começar**.
+
+A narração usa a voz em português disponível no navegador por meio de
+`SpeechSynthesis`. A qualidade da voz pode variar entre Windows, Android e iPhone.
+
+## Limitação atual
+
+As cenas usam ilustrações vetoriais originais e emojis para os objetos.
+Para alcançar acabamento de estúdio, a próxima etapa é substituir os objetos
+por ilustrações próprias e adicionar narração gravada profissionalmente.

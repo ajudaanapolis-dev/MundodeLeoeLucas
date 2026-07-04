@@ -1,8 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
-<rect width="512" height="512" rx="110" fill="#dbe9f2"/>
-<circle cx="178" cy="205" r="92" fill="#eadca1"/>
-<circle cx="334" cy="220" r="92" fill="#c8ddea"/>
-<text x="178" y="235" text-anchor="middle" font-size="96">🧒</text>
-<text x="334" y="250" text-anchor="middle" font-size="96">👶</text>
-<path d="M115 365 Q256 430 397 365" fill="none" stroke="#7f9fb9" stroke-width="26" stroke-linecap="round"/>
+<rect width="512" height="512" rx="112" fill="#dbe9f2"/>
+<circle cx="256" cy="256" r="160" fill="#fffdfa"/>
+<text x="256" y="225" text-anchor="middle" font-size="145" font-family="system-ui" font-weight="900" fill="#7898b4">ABC</text>
+<text x="256" y="345" text-anchor="middle" font-size="68" font-family="system-ui" font-weight="800" fill="#a67f63">L&amp;L</text>
 </svg>

@@ -3,8 +3,8 @@
   "short_name": "Léo e Lucas",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#edf4f2",
-  "theme_color": "#9bb8d3",
+  "background_color": "#eaf1ef",
+  "theme_color": "#8eabc3",
   "icons": [
     {
       "src": "./assets/icons/icon.svg",

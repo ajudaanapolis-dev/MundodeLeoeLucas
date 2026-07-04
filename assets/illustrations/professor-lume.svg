@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="620" viewBox="0 0 520 620">
+<defs>
+ <linearGradient id="coat" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0" stop-color="#a8bfd1"/><stop offset="1" stop-color="#7d9bb4"/>
+ </linearGradient>
+</defs>
+<ellipse cx="260" cy="570" rx="155" ry="30" fill="#8295a0" opacity=".18"/>
+<circle cx="260" cy="165" r="98" fill="#efcdb5"/>
+<path d="M162 150 Q170 48 260 42 Q355 48 360 150" fill="#526d85"/>
+<rect x="164" y="95" width="192" height="48" rx="24" fill="#7998b1"/>
+<circle cx="224" cy="162" r="9" fill="#33424b"/>
+<circle cx="296" cy="162" r="9" fill="#33424b"/>
+<path d="M232 205 Q260 228 288 205" fill="none" stroke="#895f4d" stroke-width="8" stroke-linecap="round"/>
+<path d="M136 302 Q260 230 384 302 L410 535 Q260 590 110 535Z" fill="url(#coat)"/>
+<path d="M165 315 L100 420" stroke="#efcdb5" stroke-width="38" stroke-linecap="round"/>
+<path d="M355 315 L420 415" stroke="#efcdb5" stroke-width="38" stroke-linecap="round"/>
+<circle cx="100" cy="430" r="25" fill="#efcdb5"/>
+<circle cx="420" cy="425" r="25" fill="#efcdb5"/>
+<path d="M232 280 L260 315 L288 280" fill="#fff6ea"/>
+<circle cx="260" cy="370" r="8" fill="#fff6ea"/>
+<circle cx="260" cy="420" r="8" fill="#fff6ea"/>
+<text x="260" y="495" text-anchor="middle" font-family="system-ui" font-size="44" font-weight="800" fill="#fffdfa">L&amp;L</text>
+</svg>
