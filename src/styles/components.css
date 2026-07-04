@@ -40,7 +40,7 @@
 .entry-card:active { transform: scale(0.97); }
 .entry-card h2 { font-size: 1.9rem; }
 .entry-card--leo   { background: linear-gradient(160deg, var(--c-sky), var(--c-sage)); }
-.entry-card--lucas { background: linear-gradient(160deg, var(--c-rose), var(--c-butter)); }
+.entry-card--lucas { background: linear-gradient(160deg, #D7EEF7, #CDE7D5); }
 
 /* Grade do alfabeto */
 .alpha-grid {
