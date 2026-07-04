@@ -1,0 +1,106 @@
+[
+  {
+    "id": "professor",
+    "title": "Professor Lume",
+    "theme": "personagens",
+    "palette": [
+      "#d8e8ee",
+      "#7d9bb4",
+      "#efcdb5"
+    ],
+    "elements": [
+      "guide"
+    ]
+  },
+  {
+    "id": "leo-lupa",
+    "title": "Léo explorador",
+    "theme": "personagens",
+    "palette": [
+      "#f1e5b7",
+      "#8eabc3",
+      "#6b4e3d"
+    ],
+    "elements": [
+      "leo"
+    ]
+  },
+  {
+    "id": "lucas-abc",
+    "title": "Lucas no ABC",
+    "theme": "abc",
+    "palette": [
+      "#c4dbe7",
+      "#f7f0df",
+      "#a9c7c5"
+    ],
+    "elements": [
+      "lucas"
+    ]
+  },
+  {
+    "id": "axolote",
+    "title": "Axolote",
+    "theme": "animais",
+    "palette": [
+      "#d8edf4",
+      "#9dcfc7",
+      "#efcdb5"
+    ],
+    "elements": [
+      "axolotl"
+    ]
+  },
+  {
+    "id": "aquario",
+    "title": "Aquário vivo",
+    "theme": "expedicoes",
+    "palette": [
+      "#d8edf4",
+      "#81b8c2",
+      "#c7d9b7"
+    ],
+    "elements": [
+      "aquarium"
+    ]
+  },
+  {
+    "id": "dioneia",
+    "title": "Dionéia",
+    "theme": "plantas",
+    "palette": [
+      "#d7e5cf",
+      "#8eae93",
+      "#d4a78c"
+    ],
+    "elements": [
+      "plant"
+    ]
+  },
+  {
+    "id": "aranha",
+    "title": "Oito patas",
+    "theme": "invertebrados",
+    "palette": [
+      "#ead8c6",
+      "#8eabc3",
+      "#5d4f46"
+    ],
+    "elements": [
+      "spider"
+    ]
+  },
+  {
+    "id": "folha",
+    "title": "Folha mordida",
+    "theme": "expedicoes",
+    "palette": [
+      "#c8dcc6",
+      "#f1e5b7",
+      "#9c7f67"
+    ],
+    "elements": [
+      "leaf"
+    ]
+  }
+]

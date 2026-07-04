@@ -1,0 +1,702 @@
+[
+  {
+    "id": "agua-misteriosa",
+    "title": "A Água Misteriosa",
+    "subtitle": "Por que a água ficou turva?",
+    "scene": "aquarium",
+    "difficulty": 1,
+    "environment": "Aquário",
+    "objective": "Investigar por que a água do aquário mudou.",
+    "tools": [
+      {
+        "id": "observe",
+        "name": "Olhar com calma",
+        "icon": "👁️"
+      },
+      {
+        "id": "oxygen",
+        "name": "Medidor de oxigênio",
+        "icon": "💨"
+      },
+      {
+        "id": "net",
+        "name": "Rede de limpeza",
+        "icon": "🕸️"
+      },
+      {
+        "id": "notebook",
+        "name": "Caderno",
+        "icon": "📓"
+      }
+    ],
+    "hotspots": [
+      {
+        "id": "food",
+        "label": "Comida no fundo",
+        "x": 68,
+        "y": 70,
+        "tool": "observe",
+        "clue": "Há restos de comida acumulados no fundo do aquário."
+      },
+      {
+        "id": "fish",
+        "label": "Peixe na superfície",
+        "x": 38,
+        "y": 46,
+        "tool": "oxygen",
+        "clue": "O peixe sobe mais vezes à superfície quando o oxigênio está baixo."
+      },
+      {
+        "id": "water",
+        "label": "Água turva",
+        "x": 50,
+        "y": 58,
+        "tool": "observe",
+        "clue": "A água está turva depois de várias porções de alimento."
+      }
+    ],
+    "actions": [
+      {
+        "id": "remove-food",
+        "name": "Remover excesso de comida",
+        "effect": "A água começa a clarear depois de um ciclo."
+      },
+      {
+        "id": "add-air",
+        "name": "Aumentar bolhas de oxigênio",
+        "effect": "Os peixes nadam com mais calma."
+      }
+    ],
+    "conclusion": "Excesso de alimento pode sujar a água e alterar o comportamento dos peixes."
+  },
+  {
+    "id": "folha-mordida",
+    "title": "A Folha Mordida",
+    "subtitle": "Quem visitou a planta?",
+    "scene": "garden",
+    "difficulty": 1,
+    "environment": "Jardim",
+    "objective": "Descobrir quem deixou marcas na folha.",
+    "tools": [
+      {
+        "id": "magnifier",
+        "name": "Lupa",
+        "icon": "🔍"
+      },
+      {
+        "id": "light",
+        "name": "Lanterna",
+        "icon": "🔦"
+      },
+      {
+        "id": "camera",
+        "name": "Câmera",
+        "icon": "📷"
+      },
+      {
+        "id": "notebook",
+        "name": "Caderno",
+        "icon": "📓"
+      }
+    ],
+    "hotspots": [
+      {
+        "id": "bite",
+        "label": "Marca na folha",
+        "x": 45,
+        "y": 40,
+        "tool": "magnifier",
+        "clue": "A borda da folha tem mordidas arredondadas."
+      },
+      {
+        "id": "slime",
+        "label": "Rastro brilhante",
+        "x": 52,
+        "y": 70,
+        "tool": "light",
+        "clue": "Existe um rastro de muco perto da folha."
+      },
+      {
+        "id": "snail",
+        "label": "Animal escondido",
+        "x": 70,
+        "y": 62,
+        "tool": "magnifier",
+        "clue": "Um caracol está escondido atrás do vaso."
+      }
+    ],
+    "actions": [
+      {
+        "id": "compare-bites",
+        "name": "Comparar pistas",
+        "effect": "O rastro brilhante combina com o movimento de caracóis."
+      },
+      {
+        "id": "photo",
+        "name": "Fotografar evidência",
+        "effect": "A evidência foi registrada no diário."
+      }
+    ],
+    "conclusion": "A forma da mordida e o rastro de muco indicam que o caracol provavelmente passou por ali."
+  },
+  {
+    "id": "axolote-inquieto",
+    "title": "O Axolote Inquieto",
+    "subtitle": "O que o comportamento está mostrando?",
+    "scene": "axolotl",
+    "difficulty": 2,
+    "environment": "Aquário frio",
+    "objective": "Investigar por que o axolote sobe muito à superfície.",
+    "tools": [
+      {
+        "id": "thermo",
+        "name": "Termômetro",
+        "icon": "🌡️"
+      },
+      {
+        "id": "oxygen",
+        "name": "Oxigênio",
+        "icon": "💨"
+      },
+      {
+        "id": "shelter",
+        "name": "Abrigo",
+        "icon": "🪨"
+      },
+      {
+        "id": "notebook",
+        "name": "Caderno",
+        "icon": "📓"
+      }
+    ],
+    "hotspots": [
+      {
+        "id": "gills",
+        "label": "Brânquias",
+        "x": 58,
+        "y": 45,
+        "tool": "observe",
+        "clue": "As brânquias parecem curvadas."
+      },
+      {
+        "id": "temp",
+        "label": "Água",
+        "x": 35,
+        "y": 66,
+        "tool": "thermo",
+        "clue": "A água está mais quente do que o ideal para o axolote."
+      },
+      {
+        "id": "surface",
+        "label": "Superfície",
+        "x": 55,
+        "y": 28,
+        "tool": "oxygen",
+        "clue": "Subidas frequentes podem indicar desconforto ou pouco oxigênio."
+      }
+    ],
+    "actions": [
+      {
+        "id": "cool",
+        "name": "Resfriar lentamente",
+        "effect": "O axolote se move com menos inquietação."
+      },
+      {
+        "id": "add-hide",
+        "name": "Adicionar abrigo",
+        "effect": "O axolote encontra um lugar tranquilo para descansar."
+      }
+    ],
+    "conclusion": "Temperatura, oxigênio e abrigo influenciam o bem-estar do axolote."
+  },
+  {
+    "id": "dioneia-cansada",
+    "title": "A Dionéia Cansada",
+    "subtitle": "A planta precisa de quê?",
+    "scene": "plant",
+    "difficulty": 2,
+    "environment": "Estufa",
+    "objective": "Entender por que a dionéia está com muitas armadilhas fechadas.",
+    "tools": [
+      {
+        "id": "lightmeter",
+        "name": "Medidor de luz",
+        "icon": "☀️"
+      },
+      {
+        "id": "water",
+        "name": "Conta-gotas",
+        "icon": "💧"
+      },
+      {
+        "id": "magnifier",
+        "name": "Lupa",
+        "icon": "🔍"
+      },
+      {
+        "id": "notebook",
+        "name": "Caderno",
+        "icon": "📓"
+      }
+    ],
+    "hotspots": [
+      {
+        "id": "trap",
+        "label": "Armadilha fechada",
+        "x": 53,
+        "y": 45,
+        "tool": "magnifier",
+        "clue": "Várias armadilhas estão fechadas sem inseto dentro."
+      },
+      {
+        "id": "light",
+        "label": "Luz fraca",
+        "x": 30,
+        "y": 20,
+        "tool": "lightmeter",
+        "clue": "A luz está baixa para uma planta que depende de fotossíntese."
+      },
+      {
+        "id": "soil",
+        "label": "Substrato úmido",
+        "x": 48,
+        "y": 75,
+        "tool": "water",
+        "clue": "O substrato está úmido; água não parece ser o problema principal."
+      }
+    ],
+    "actions": [
+      {
+        "id": "increase-light",
+        "name": "Aumentar luz suavemente",
+        "effect": "Depois de um ciclo, as folhas parecem mais firmes."
+      },
+      {
+        "id": "wait",
+        "name": "Esperar a armadilha descansar",
+        "effect": "A planta recupera energia sem novos toques."
+      }
+    ],
+    "conclusion": "Tocar armadilhas sem alimento gasta energia; luz adequada continua essencial."
+  },
+  {
+    "id": "oito-patas",
+    "title": "O Visitante de Oito Patas",
+    "subtitle": "Inseto ou aracnídeo?",
+    "scene": "invertebrate",
+    "difficulty": 2,
+    "environment": "Parede do jardim",
+    "objective": "Identificar um animal pequeno usando evidências.",
+    "tools": [
+      {
+        "id": "magnifier",
+        "name": "Lupa",
+        "icon": "🔍"
+      },
+      {
+        "id": "legs",
+        "name": "Conta-patas",
+        "icon": "🧮"
+      },
+      {
+        "id": "antenna",
+        "name": "Marcador de antenas",
+        "icon": "〰️"
+      },
+      {
+        "id": "notebook",
+        "name": "Caderno",
+        "icon": "📓"
+      }
+    ],
+    "hotspots": [
+      {
+        "id": "legs",
+        "label": "Patas",
+        "x": 52,
+        "y": 58,
+        "tool": "legs",
+        "clue": "O animal tem oito patas."
+      },
+      {
+        "id": "head",
+        "label": "Cabeça",
+        "x": 50,
+        "y": 41,
+        "tool": "antenna",
+        "clue": "Não há antenas visíveis."
+      },
+      {
+        "id": "body",
+        "label": "Corpo",
+        "x": 50,
+        "y": 51,
+        "tool": "magnifier",
+        "clue": "O corpo parece dividido em duas regiões."
+      }
+    ],
+    "actions": [
+      {
+        "id": "classify",
+        "name": "Registrar como aracnídeo",
+        "effect": "O registro combina com oito patas e ausência de antenas."
+      },
+      {
+        "id": "draw",
+        "name": "Desenhar no caderno",
+        "effect": "O desenho ajuda a lembrar das características."
+      }
+    ],
+    "conclusion": "Oito patas, sem antenas e corpo em duas regiões apontam para aracnídeo."
+  },
+  {
+    "id": "terrario-noturno",
+    "title": "O Terrário Noturno",
+    "subtitle": "Quem aparece no escuro?",
+    "scene": "night",
+    "difficulty": 2,
+    "environment": "Terrário",
+    "objective": "Investigar animais mais ativos à noite.",
+    "tools": [
+      {
+        "id": "light",
+        "name": "Lanterna",
+        "icon": "🔦"
+      },
+      {
+        "id": "magnifier",
+        "name": "Lupa",
+        "icon": "🔍"
+      },
+      {
+        "id": "clock",
+        "name": "Relógio",
+        "icon": "⏱️"
+      },
+      {
+        "id": "notebook",
+        "name": "Caderno",
+        "icon": "📓"
+      }
+    ],
+    "hotspots": [
+      {
+        "id": "soil",
+        "label": "Terra úmida",
+        "x": 40,
+        "y": 72,
+        "tool": "magnifier",
+        "clue": "A terra úmida atrai alguns animais noturnos."
+      },
+      {
+        "id": "leaf",
+        "label": "Debaixo da folha",
+        "x": 62,
+        "y": 62,
+        "tool": "light",
+        "clue": "Um tatuzinho aparece quando a lanterna ilumina a folha."
+      },
+      {
+        "id": "time",
+        "label": "Horário",
+        "x": 22,
+        "y": 22,
+        "tool": "clock",
+        "clue": "Alguns animais saem mais no período noturno."
+      }
+    ],
+    "actions": [
+      {
+        "id": "observe-night",
+        "name": "Observar em silêncio",
+        "effect": "Mais criaturas aparecem quando o ambiente fica calmo."
+      },
+      {
+        "id": "record",
+        "name": "Registrar atividade noturna",
+        "effect": "A observação foi salva no diário."
+      }
+    ],
+    "conclusion": "Algumas criaturas pequenas preferem ambiente escuro e úmido."
+  },
+  {
+    "id": "quem-vive-aqui",
+    "title": "Quem Vive Aqui?",
+    "subtitle": "Monte o habitat adequado",
+    "scene": "habitat",
+    "difficulty": 3,
+    "environment": "Oficina de habitats",
+    "objective": "Escolher condições adequadas para cada criatura.",
+    "tools": [
+      {
+        "id": "water",
+        "name": "Água",
+        "icon": "💧"
+      },
+      {
+        "id": "shelter",
+        "name": "Abrigo",
+        "icon": "🪨"
+      },
+      {
+        "id": "lightmeter",
+        "name": "Luz",
+        "icon": "☀️"
+      },
+      {
+        "id": "notebook",
+        "name": "Caderno",
+        "icon": "📓"
+      }
+    ],
+    "hotspots": [
+      {
+        "id": "creature",
+        "label": "Criatura",
+        "x": 50,
+        "y": 46,
+        "tool": "observe",
+        "clue": "O caracol precisa de um lugar úmido e protegido."
+      },
+      {
+        "id": "dry",
+        "label": "Lugar seco",
+        "x": 72,
+        "y": 66,
+        "tool": "water",
+        "clue": "O ambiente está seco demais para o caracol."
+      },
+      {
+        "id": "hide",
+        "label": "Esconderijo",
+        "x": 35,
+        "y": 68,
+        "tool": "shelter",
+        "clue": "Um esconderijo reduz exposição e ajuda o animal a descansar."
+      }
+    ],
+    "actions": [
+      {
+        "id": "add-moisture",
+        "name": "Adicionar umidade",
+        "effect": "O caracol começa a se mover mais."
+      },
+      {
+        "id": "add-shelter",
+        "name": "Adicionar esconderijo",
+        "effect": "A criatura encontra um lugar seguro."
+      }
+    ],
+    "conclusion": "Habitat adequado depende de umidade, abrigo e comportamento da criatura."
+  },
+  {
+    "id": "mini-lago",
+    "title": "O Mini Lago em Equilíbrio",
+    "subtitle": "O que mantém o lago saudável?",
+    "scene": "pond",
+    "difficulty": 3,
+    "environment": "Mini lago",
+    "objective": "Equilibrar plantas, luz, oxigênio e organismos.",
+    "tools": [
+      {
+        "id": "oxygen",
+        "name": "Oxigênio",
+        "icon": "💨"
+      },
+      {
+        "id": "lightmeter",
+        "name": "Luz",
+        "icon": "☀️"
+      },
+      {
+        "id": "plants",
+        "name": "Plantas",
+        "icon": "🌿"
+      },
+      {
+        "id": "notebook",
+        "name": "Caderno",
+        "icon": "📓"
+      }
+    ],
+    "hotspots": [
+      {
+        "id": "plants",
+        "label": "Plantas aquáticas",
+        "x": 30,
+        "y": 65,
+        "tool": "plants",
+        "clue": "Plantas aquáticas ajudam o ambiente, mas precisam de luz."
+      },
+      {
+        "id": "surface",
+        "label": "Superfície",
+        "x": 55,
+        "y": 36,
+        "tool": "oxygen",
+        "clue": "Pouco movimento na superfície pode reduzir oxigenação."
+      },
+      {
+        "id": "sun",
+        "label": "Luz",
+        "x": 72,
+        "y": 20,
+        "tool": "lightmeter",
+        "clue": "Luz demais pode favorecer algas; luz de menos prejudica plantas."
+      }
+    ],
+    "actions": [
+      {
+        "id": "balance-plants",
+        "name": "Ajustar plantas",
+        "effect": "O lago fica mais estável quando há plantas em equilíbrio."
+      },
+      {
+        "id": "add-flow",
+        "name": "Criar movimento suave",
+        "effect": "A superfície se movimenta e melhora a oxigenação."
+      }
+    ],
+    "conclusion": "Um lago pequeno precisa equilibrar luz, plantas e oxigênio."
+  },
+  {
+    "id": "rastro-quintal",
+    "title": "O Rastro no Quintal",
+    "subtitle": "Quem passou depois da chuva?",
+    "scene": "tracks",
+    "difficulty": 3,
+    "environment": "Quintal",
+    "objective": "Usar pistas para descobrir quem passou pelo quintal.",
+    "tools": [
+      {
+        "id": "magnifier",
+        "name": "Lupa",
+        "icon": "🔍"
+      },
+      {
+        "id": "camera",
+        "name": "Câmera",
+        "icon": "📷"
+      },
+      {
+        "id": "measure",
+        "name": "Régua",
+        "icon": "📏"
+      },
+      {
+        "id": "notebook",
+        "name": "Caderno",
+        "icon": "📓"
+      }
+    ],
+    "hotspots": [
+      {
+        "id": "slime",
+        "label": "Linha brilhante",
+        "x": 35,
+        "y": 62,
+        "tool": "magnifier",
+        "clue": "Um rastro brilhante sugere caracol ou lesma."
+      },
+      {
+        "id": "footprint",
+        "label": "Pegadas pequenas",
+        "x": 60,
+        "y": 55,
+        "tool": "measure",
+        "clue": "As pegadas são pequenas e aparecem perto da terra úmida."
+      },
+      {
+        "id": "leaf",
+        "label": "Folha mexida",
+        "x": 72,
+        "y": 43,
+        "tool": "camera",
+        "clue": "A folha foi deslocada, mas não foi comida."
+      }
+    ],
+    "actions": [
+      {
+        "id": "compare-tracks",
+        "name": "Comparar rastros",
+        "effect": "O rastro brilhante é a pista mais forte."
+      },
+      {
+        "id": "save-photo",
+        "name": "Guardar foto",
+        "effect": "A foto foi anexada ao diário."
+      }
+    ],
+    "conclusion": "Rastros podem indicar animais mesmo quando não vemos o animal diretamente."
+  },
+  {
+    "id": "microecossistema",
+    "title": "Construa um Microecossistema",
+    "subtitle": "Faça um potinho vivo funcionar",
+    "scene": "micro",
+    "difficulty": 4,
+    "environment": "Pote de observação",
+    "objective": "Montar um ambiente equilibrado e observar ciclos.",
+    "tools": [
+      {
+        "id": "soil",
+        "name": "Terra",
+        "icon": "🟫"
+      },
+      {
+        "id": "water",
+        "name": "Água",
+        "icon": "💧"
+      },
+      {
+        "id": "plants",
+        "name": "Plantas",
+        "icon": "🌿"
+      },
+      {
+        "id": "clock",
+        "name": "Ciclos",
+        "icon": "⏱️"
+      }
+    ],
+    "hotspots": [
+      {
+        "id": "soil",
+        "label": "Camada de terra",
+        "x": 48,
+        "y": 74,
+        "tool": "soil",
+        "clue": "A camada de terra guarda umidade e sustenta plantas."
+      },
+      {
+        "id": "water",
+        "label": "Gotas na parede",
+        "x": 65,
+        "y": 40,
+        "tool": "water",
+        "clue": "Muita água pode deixar tudo encharcado."
+      },
+      {
+        "id": "plant",
+        "label": "Pequena planta",
+        "x": 44,
+        "y": 58,
+        "tool": "plants",
+        "clue": "A planta responde à luz e à umidade."
+      }
+    ],
+    "actions": [
+      {
+        "id": "balance-water",
+        "name": "Ajustar água",
+        "effect": "O potinho fica úmido sem ficar encharcado."
+      },
+      {
+        "id": "observe-days",
+        "name": "Observar 3 ciclos",
+        "effect": "O ambiente muda lentamente com o tempo."
+      }
+    ],
+    "conclusion": "Um microecossistema precisa de equilíbrio entre terra, água, luz, plantas e tempo."
+  }
+]

@@ -1,0 +1,158 @@
+[
+  {
+    "letter": "A",
+    "word": "Axolote",
+    "action": "swim",
+    "fact": "O axolote vive na água e possui brânquias externas."
+  },
+  {
+    "letter": "B",
+    "word": "Baleia",
+    "action": "splash",
+    "fact": "A baleia sobe à superfície para respirar e solta água pelo espiráculo."
+  },
+  {
+    "letter": "C",
+    "word": "Caracol",
+    "action": "crawl",
+    "fact": "O caracol se move lentamente e pode deixar um rastro brilhante."
+  },
+  {
+    "letter": "D",
+    "word": "Dionéia",
+    "action": "snap",
+    "fact": "A dionéia fecha a armadilha quando algo toca seus pelos sensitivos."
+  },
+  {
+    "letter": "E",
+    "word": "Estrela-do-mar",
+    "action": "wave",
+    "fact": "A estrela-do-mar vive no oceano e movimenta seus braços lentamente."
+  },
+  {
+    "letter": "F",
+    "word": "Formiga",
+    "action": "carry",
+    "fact": "A formiga carrega alimento e segue trilhas até o formigueiro."
+  },
+  {
+    "letter": "G",
+    "word": "Girafa",
+    "action": "stretch",
+    "fact": "A girafa alcança folhas altas com seu pescoço comprido."
+  },
+  {
+    "letter": "H",
+    "word": "Helicóptero",
+    "action": "fly",
+    "fact": "O helicóptero sobe, muda de direção e pousa devagar."
+  },
+  {
+    "letter": "I",
+    "word": "Inseto",
+    "action": "flutter",
+    "fact": "Muitos insetos possuem seis patas e antenas."
+  },
+  {
+    "letter": "J",
+    "word": "Joaninha",
+    "action": "openwings",
+    "fact": "A joaninha abre as asas e voa até uma folha."
+  },
+  {
+    "letter": "K",
+    "word": "Kiwi",
+    "action": "slice",
+    "fact": "O kiwi tem casca marrom e uma polpa verde cheia de sementes."
+  },
+  {
+    "letter": "L",
+    "word": "Leão",
+    "action": "roar",
+    "fact": "O leão movimenta a juba e ruge para se comunicar."
+  },
+  {
+    "letter": "M",
+    "word": "Macaco",
+    "action": "swing",
+    "fact": "O macaco se balança entre os galhos e pega frutas."
+  },
+  {
+    "letter": "N",
+    "word": "Navio",
+    "action": "sail",
+    "fact": "O navio atravessa a água e cria ondas suaves."
+  },
+  {
+    "letter": "O",
+    "word": "Ovelha",
+    "action": "bounce",
+    "fact": "A ovelha pula e balança sua lã macia."
+  },
+  {
+    "letter": "P",
+    "word": "Pipoca",
+    "action": "pop",
+    "fact": "O milho estoura quando recebe calor e vira pipoca."
+  },
+  {
+    "letter": "Q",
+    "word": "Queijo",
+    "action": "find",
+    "fact": "O queijo pode ser procurado por um ratinho curioso."
+  },
+  {
+    "letter": "R",
+    "word": "Robô",
+    "action": "dance",
+    "fact": "O robô segue uma sequência de movimentos."
+  },
+  {
+    "letter": "S",
+    "word": "Sapo",
+    "action": "jump",
+    "fact": "O sapo salta entre folhas e cria pequenas ondas."
+  },
+  {
+    "letter": "T",
+    "word": "Tartaruga",
+    "action": "hide",
+    "fact": "A tartaruga caminha devagar e se protege no casco."
+  },
+  {
+    "letter": "U",
+    "word": "Urso",
+    "action": "wave",
+    "fact": "O urso levanta a pata e acena com calma."
+  },
+  {
+    "letter": "V",
+    "word": "Vulcão",
+    "action": "erupt",
+    "fact": "O vulcão solta fumaça e lava lentamente, sem susto."
+  },
+  {
+    "letter": "W",
+    "word": "Waffle",
+    "action": "stack",
+    "fact": "O waffle pode formar uma pilha com frutas por cima."
+  },
+  {
+    "letter": "X",
+    "word": "Xilofone",
+    "action": "music",
+    "fact": "O xilofone toca notas diferentes quando suas teclas são tocadas."
+  },
+  {
+    "letter": "Y",
+    "word": "Yak",
+    "action": "walk",
+    "fact": "O yak vive em lugares frios e deixa pegadas na neve."
+  },
+  {
+    "letter": "Z",
+    "word": "Zebra",
+    "action": "run",
+    "fact": "A zebra corre e suas listras ajudam a reconhecê-la."
+  }
+]
